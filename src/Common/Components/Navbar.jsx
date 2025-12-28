@@ -2,28 +2,50 @@ import { Link } from "react-router-dom"
 
 function Navbar() {
   return (
-    <nav className="bg-slate-900 text-white px-8 py-4 flex justify-between items-center">
-      
-      <h1 className="text-2xl font-bold text-teal-400">
-        FixItNow
-      </h1>
+    <nav className="bg-slate-900 text-white px-8 py-4 shadow-md">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
 
-      <ul className="flex gap-6 text-sm">
-        <li>
-          <Link to="/" className="hover:text-teal-400 transition">
+        {/* LOGO */}
+        <Link
+          to="/"
+          className="text-2xl font-bold text-emerald-400 tracking-wide"
+        >
+          FixItNow
+        </Link>
+
+        {/* NAV LINKS */}
+        <div className="flex items-center gap-8 text-sm font-medium">
+
+          <Link
+            to="/"
+            className="hover:text-emerald-400 transition"
+          >
             Home
           </Link>
-        </li>
-        <li>
-          <Link to="/workers" className="hover:text-teal-400 transition">
+
+          <Link
+            to="/workers"
+            className="hover:text-emerald-400 transition"
+          >
             Find Workers
           </Link>
-        </li>
-        <li className="border px-4 py-1 rounded hover:bg-teal-400 hover:text-black transition cursor-pointer">
-          Login
-        </li>
-      </ul>
 
+          <Link
+            to="/login"
+            className="hover:text-emerald-400 transition"
+          >
+            Login
+          </Link>
+
+          <Link
+            to="/register/worker"
+            className="bg-emerald-500 text-white px-4 py-2 rounded-md hover:bg-emerald-600 transition"
+          >
+            Join as Worker
+          </Link>
+
+        </div>
+      </div>
     </nav>
   )
 }

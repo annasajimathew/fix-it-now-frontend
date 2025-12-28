@@ -7,12 +7,12 @@ function ProfessionWorkers() {
   const [location, setLocation] = useState("")
 
   const allWorkers = [
-    { id: 1, name: "Rahul Sharma", service: "Electrician", rating: 4.6, location: "Kochi", image: "https://randomuser.me/api/portraits/men/32.jpg" },
-    { id: 2, name: "Amit Verma", service: "Plumber", rating: 4.4, location: "Trivandrum", image: "https://randomuser.me/api/portraits/men/45.jpg" },
-    { id: 3, name: "Suresh Kumar", service: "AC Technician", rating: 4.8, location: "Kottayam", image: "https://randomuser.me/api/portraits/men/68.jpg" },
-    { id: 4, name: "Priya Nair", service: "Gardener", rating: 4.5, location: "Kochi", image: "https://randomuser.me/api/portraits/women/21.jpg" },
-    { id: 5, name: "Vikram Das", service: "Painter", rating: 4.7, location: "Ernakulam", image: "https://randomuser.me/api/portraits/men/77.jpg" },
-    { id: 6, name: "Anita Joseph", service: "Cook", rating: 4.3, location: "Trivandrum", image: "https://randomuser.me/api/portraits/women/33.jpg" },
+    { id: 1, name: "Kevin mathew", service: "Electrician", rating: 4.6, location: "Kochi", image: "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D" },
+    { id: 2, name: "Toni Alex", service: "Plumber", rating: 4.4, location: "Trivandrum", image: "https://img.freepik.com/free-photo/cheerful-indian-businessman-smiling-closeup-portrait-jobs-career-campaign_53876-129416.jpg?semt=ais_hybrid&w=740&q=80" },
+    { id: 3, name: "Deon Peter", service: "AC Technician", rating: 4.8, location: "Kottayam", image: "https://img.freepik.com/free-photo/closeup-young-hispanic-man-casuals-studio_662251-600.jpg?semt=ais_hybrid&w=740&q=80" },
+    { id: 4, name: "Nancy George", service: "Gardener", rating: 4.5, location: "Kochi", image: "https://thumbs.dreamstime.com/b/head-shot-portrait-beautiful-young-indian-woman-sitting-alone-sofa-home-posing-camera-exude-optimism-positive-mood-364417991.jpg" },
+    { id: 5, name: "Victor Creel", service: "Painter", rating: 4.7, location: "Ernakulam", image: "https://media.istockphoto.com/id/2160830783/photo/positive-handsome-young-indian-man-head-shot-front-portrait.jpg?s=612x612&w=0&k=20&c=q8jNuQWO35W2-7luXuLdWGP2KKwKpdEUiVICJDjjku8=" },
+    { id: 6, name: "Anita Joseph", service: "Cook", rating: 4.3, location: "Trivandrum", image: "https://thumbs.dreamstime.com/b/head-shot-portrait-young-pretty-indian-woman-standing-library-head-shot-portrait-young-pretty-indian-woman-standing-library-395580049.jpg" },
   ]
 
   const filteredWorkers = allWorkers.filter(
