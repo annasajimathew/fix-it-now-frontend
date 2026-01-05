@@ -1,122 +1,199 @@
-import { FaStar, FaMapMarkerAlt, FaPhone, FaComments } from "react-icons/fa"
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-function WorkerProfile() {
-  const worker = {
-    name: "Alex Abraham",
-    service: "Electrician",
-    location: "Kochi",
-    rating: 4.6,
-    experience: "6 Years",
-    image: "https://static.vecteezy.com/system/resources/thumbnails/006/859/348/small/young-boy-indian-student-portrait-photo.jpg",
-    skills: ["Wiring", "Appliance Repair", "Lighting"],
-    reviews: [
-      { user: "Rahul", comment: "Very professional and on time.", rating: 5 },
-      { user: "Anita", comment: "Quick service and affordable.", rating: 4 }
-    ]
-  }
+/* ================= STAR RATING COMPONENT ================= */
+const StarRating = ({ rating, setRating }) => {
+  const [hover, setHover] = useState(0);
 
   return (
-    <div className="min-h-screen bg-slate-800 px-6 py-16">
+    <div className="flex gap-1 mb-3">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          className={`text-2xl cursor-pointer ${
+            hover >= star || rating >= star
+              ? "text-yellow-400"
+              : "text-gray-300"
+          }`}
+          onClick={() => setRating(star)}
+          onMouseEnter={() => setHover(star)}
+          onMouseLeave={() => setHover(0)}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  );
+};
 
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+function WorkerProfile() {
+  const { id } = useParams();
 
-        {/* HEADER */}
-        <div className="flex flex-col md:flex-row">
+  const [worker, setWorker] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
-          {/* IMAGE */}
-          <div className="md:w-1/3 bg-slate-800">
-            <img
-              src={worker.image}
-              alt={worker.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
+  // review form state
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
 
-          {/* DETAILS */}
-          <div className="p-8 flex-1">
+  // logged in user
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
 
-            <h2 className="text-3xl font-bold text-slate-800 mb-1">
-              {worker.name}
-            </h2>
+  useEffect(() => {
+    fetchWorker();
+    fetchReviews();
+  }, [id]);
 
-            <p className="text-emerald-600 font-semibold text-lg">
-              {worker.service}
-            </p>
+  // ================= FETCH WORKER =================
+  const fetchWorker = async () => {
+    const res = await axios.get(
+      `http://localhost:5000/api/workers/profile/${id}`
+    );
+    setWorker(res.data);
+  };
 
-            <div className="flex gap-6 mt-4 text-sm text-slate-600">
-              <span className="flex items-center gap-1">
-                <FaStar className="text-yellow-400" />
-                {worker.rating} Rating
-              </span>
+  // ================= FETCH REVIEWS =================
+  const fetchReviews = async () => {
+    const res = await axios.get(
+      `http://localhost:5000/api/reviews/${id}`
+    );
+    setReviews(res.data);
+  };
 
-              <span className="flex items-center gap-1">
-                <FaMapMarkerAlt className="text-emerald-500" />
-                {worker.location}
-              </span>
-            </div>
+  // ================= SUBMIT REVIEW =================
+  const submitReview = async () => {
+    if (!rating || !comment) {
+      alert("Please provide rating and comment");
+      return;
+    }
 
-            <p className="mt-4 text-gray-600">
-              <span className="font-medium text-slate-700">Experience:</span>{" "}
-              {worker.experience}
-            </p>
+    try {
+      await axios.post(
+        `http://localhost:5000/api/reviews/${id}`,
+        { rating, comment },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-            {/* SKILLS */}
-            <div className="mt-5 flex flex-wrap gap-3">
-              {worker.skills.map((skill, index) => (
-                <span
-                  key={index}
-                  className="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-1 rounded-full text-sm font-medium"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
+      alert("Review added successfully");
+      setRating(0);
+      setComment("");
+      fetchReviews();
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to add review");
+    }
+  };
 
-            {/* ACTION BUTTONS */}
-            <div className="flex gap-4 mt-8">
-              <button className="flex items-center gap-2 bg-emerald-500 text-white px-6 py-2 rounded-md font-medium hover:bg-emerald-600 transition">
-                <FaPhone /> Call
-              </button>
+  if (!worker) return <div>Loading...</div>;
 
-              <button className="flex items-center gap-2 bg-slate-800 text-white px-6 py-2 rounded-md font-medium hover:bg-slate-900 transition">
-                <FaComments /> Chat
-              </button>
-            </div>
+  /* ================= CALCULATE AVERAGE RATING ================= */
+  const averageRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((sum, r) => sum + r.rating, 0) /
+          reviews.length
+        ).toFixed(1)
+      : "No ratings";
 
-          </div>
+  return (
+    <div className="min-h-screen bg-gray-100 py-10 px-6">
+      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow p-8">
+        {/* ================= PROFILE IMAGE ================= */}
+        <img
+          src={
+            worker.profileImage
+              ? `http://localhost:5000/${worker.profileImage}`
+              : "https://via.placeholder.com/200"
+          }
+          className="w-full h-80 object-cover rounded-xl mb-6"
+        />
+
+        {/* ================= BASIC INFO ================= */}
+        <h1 className="text-3xl font-bold mt-2">{worker.name}</h1>
+
+        <p className="text-xl font-semibold text-green-700 uppercase">{worker.service}</p>
+
+        {/* ⭐ Average Rating */}
+        <p className="text-yellow-500 mt-1">⭐ {averageRating} / 5 ({reviews.length} reviews)</p>
+
+        
+
+        <p className="mt-2">📍 {worker.location}</p>
+        <p>📞 {worker.phone}</p>
+        <p>🎓 {worker.education}</p>
+        <p>🛠 Experience: {worker.experience} years</p>
+        <p>🗣 Languages: {worker.languages.join(", ")}</p>
+
+        {/* ================= ACTION BUTTONS ================= */}
+        <div className="flex gap-4 mt-6">
+          <a
+            href={`tel:${worker.phone}`}
+            className="bg-emerald-600 text-white px-6 py-3 rounded-lg"
+          >
+            Call
+          </a>
+
+          <button className="bg-slate-900 text-white px-6 py-3 rounded-lg">
+            Chat
+          </button>
         </div>
 
-        {/* REVIEWS */}
-        <div className="p-8 border-t bg-gray-50">
-          <h3 className="text-xl font-semibold text-slate-800 mb-6">
+        {/* ================= CUSTOMER REVIEWS ================= */}
+        <div className="mt-10">
+          <h3 className="text-2xl font-semibold mb-4">
             Customer Reviews
           </h3>
 
-          {worker.reviews.map((review, index) => (
-            <div
-              key={index}
-              className="mb-5 bg-white p-4 rounded-lg shadow-sm"
-            >
-              <div className="flex justify-between items-center mb-1">
-                <p className="font-medium text-slate-700">
-                  {review.user}
+          {reviews.length === 0 ? (
+            <p className="text-gray-500">No reviews yet</p>
+          ) : (
+            reviews.map((review) => (
+              <div
+                key={review._id}
+                className="border p-4 rounded-lg mb-4"
+              >
+                <p className="font-semibold">
+                  {review.user?.name || "User"}
                 </p>
-                <span className="flex items-center gap-1 text-sm">
-                  <FaStar className="text-yellow-400" />
-                  {review.rating}
-                </span>
+                <p>⭐ {review.rating}</p>
+                <p>{review.comment}</p>
               </div>
-
-              <p className="text-sm text-gray-600">
-                {review.comment}
-              </p>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
+        {/* ================= ADD REVIEW (USER ONLY) ================= */}
+        {user?.role === "user" && (
+          <div className="mt-10 bg-gray-50 p-6 rounded-lg border">
+            <h3 className="text-xl font-semibold mb-4">
+              Rate this worker
+            </h3>
+
+            <StarRating rating={rating} setRating={setRating} />
+
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Write your review..."
+              className="border p-2 rounded w-full mb-3"
+            />
+
+            <button
+              onClick={submitReview}
+              className="bg-emerald-600 text-white px-6 py-2 rounded"
+            >
+              Submit Review
+            </button>
+          </div>
+        )}
       </div>
     </div>
-  )
+  );
 }
 
-export default WorkerProfile
+export default WorkerProfile;

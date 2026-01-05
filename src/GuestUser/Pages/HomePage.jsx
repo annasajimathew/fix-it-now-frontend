@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaBolt,
-  FaTools,
-  FaSnowflake,
-  FaSearch,
-  FaComments,
-  FaStar,
+import { FaBolt, FaTools, FaSnowflake, FaSearch, FaComments, FaStar,
 } from "react-icons/fa";
 
 function HomePage() {
@@ -219,9 +213,9 @@ function HomePage() {
     <p className="text-gray-200 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
       Join FixItNow to reach more customers and grow your career. Showcase your skills and connect instantly with clients in your area.
     </p>
-    <button className="bg-white text-teal-700 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition">
+    <Link to={"/register/worker"} className="bg-white text-teal-700 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition">
       Register as Worker
-    </button>
+    </Link>
   </div>
 </section>
 

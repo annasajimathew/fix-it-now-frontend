@@ -1,55 +1,58 @@
-import { FaStar, FaMapMarkerAlt, FaUserTie } from "react-icons/fa"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 function WorkerCard({ worker }) {
+  const navigate = useNavigate();
+
+  // ================= CALCULATE AVERAGE RATING =================
+  const averageRating =
+    worker.reviews && worker.reviews.length > 0
+      ? (
+          worker.reviews.reduce((sum, r) => sum + r.rating, 0) /
+          worker.reviews.length
+        ).toFixed(1)
+      : "No ratings";
+
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition flex overflow-hidden border border-gray-100">
+    <div className="bg-white rounded-xl shadow p-5 flex gap-6">
+      <img
+        src={
+          worker.profileImage
+            ? `http://localhost:5000/${worker.profileImage}`
+            : "https://via.placeholder.com/150"
+        }
+        alt="worker"
+        className="w-32 h-32 rounded-xl object-cover"
+      />
 
-      {/* LEFT : PROFILE IMAGE */}
-      <div className="w-1/3 bg-gray-100">
-        <img
-          src={worker.image}
-          alt={worker.name}
-          className="h-full w-full object-cover"
-        />
-      </div>
+      <div className="flex-1">
+        <h3 className="text-xl font-bold">{worker.name}</h3>
 
-      {/* RIGHT : DETAILS */}
-      <div className="w-2/3 p-5 flex flex-col justify-between bg-slate-700">
+        {/* ================= SERVICE ================= */}
+        <p className="text-green-600 font-semibold">
+          {worker.service}
+        </p>
 
-        <div>
-          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-            <FaUserTie className="text-emerald-500" />
-            {worker.name}
-          </h3>
+        {/* no of reviews */}
+        <p className="text-xs text-gray-500">({worker.reviewCount} reviews)</p>
 
-          <p className="text-sm text-yellow-100 mt-1">
-            {worker.service}
-          </p>
 
-          <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
-            <div className="flex items-center gap-1">
-              <FaStar className="text-yellow-400" />
-              <span className="font-medium">{worker.rating}</span>
-            </div>
+        <p className="text-sm text-gray-600">
+          📍 {worker.location}
+        </p>
 
-            <div className="flex items-center gap-1">
-              <FaMapMarkerAlt className="text-emerald-500" />
-              {worker.location}
-            </div>
-          </div>
-        </div>
+        <p className="text-sm">
+          Experience: {worker.experience} years
+        </p>
 
-        <Link
-          to={`/worker/${worker.id}`}
-          className="mt-4 text-center bg-slate-900 text-white py-2 rounded-md font-medium hover:bg-emerald-900 transition"
+        <button
+          onClick={() => navigate(`/worker/${worker._id}`)}
+          className="mt-4 bg-slate-900 text-white px-6 py-2 rounded-lg hover:bg-slate-800"
         >
           View Profile
-        </Link>
+        </button>
       </div>
-
     </div>
-  )
+  );
 }
 
-export default WorkerCard
+export default WorkerCard;

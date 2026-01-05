@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -7,6 +7,8 @@ import { FiMail, FiLock } from "react-icons/fi";
 
 function Login() {
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,6 +30,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!email || !password) {
       toast.error("Please enter both email and password");
       return;
@@ -35,16 +38,33 @@ function Login() {
 
     try {
       setLoading(true);
+
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
         { email, password }
       );
+
       const { user, token } = response.data;
+
+      // Save to context + localStorage
       login(user, token);
-      setLoading(false);
+      localStorage.setItem("role", user.role);
+
+      toast.success("Login successful");
+
+      // ✅ ROLE BASED REDIRECT
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else if (user.role === "worker") {
+        navigate("/worker");
+      } else {
+        navigate("/user");
+      }
+
     } catch (error) {
-      setLoading(false);
       toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,89 +92,58 @@ function Login() {
       ))}
 
       {/* Login card */}
-      <div className="relative max-w-md w-full bg-gray-800/90 backdrop-blur-md p-12 rounded-3xl shadow-2xl border border-gray-700  transition-transform duration-500 overflow-hidden">
-        <h2 className="text-4xl font-extrabold text-center text-white drop-shadow-lg mb-10 ">
+      <div className="relative max-w-md w-full bg-gray-800/90 backdrop-blur-md p-12 rounded-3xl shadow-2xl border border-gray-700 overflow-hidden">
+        <h2 className="text-4xl font-extrabold text-center text-white mb-10">
           Welcome Back
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email */}
           <div className="relative">
-            <FiMail className="absolute top-3 left-3 text-gray-400 " size={20} />
+            <FiMail className="absolute top-3 left-3 text-gray-400" size={20} />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              required
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/20 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 shadow-inner hover:shadow-lg transition duration-300"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-900 text-white border border-white/20 focus:ring-2 focus:ring-emerald-400"
             />
           </div>
 
           {/* Password */}
           <div className="relative">
-            <FiLock className="absolute top-3 left-3 text-gray-400 " size={20} />
+            <FiLock className="absolute top-3 left-3 text-gray-400" size={20} />
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="********"
-              required
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/20 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 shadow-inner hover:shadow-lg transition duration-300"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-900 text-white border border-white/20 focus:ring-2 focus:ring-emerald-400"
             />
           </div>
 
-          {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-600 text-white font-bold rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transform transition duration-300"
+            className="w-full py-3 bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-600 text-white font-bold rounded-xl hover:scale-105 transition"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        {/* Links */}
         <div className="mt-6 text-center text-sm text-gray-300">
           Don't have an account?{" "}
-          <Link
-            to="/register/user"
-            className="text-emerald-400 hover:text-emerald-200 font-medium transition"
-          >
+          <Link to="/register/user" className="text-emerald-400">
             Register
           </Link>
         </div>
 
         <div className="mt-3 text-center text-sm">
-          <Link
-            to="/forgot-password"
-            className="text-red-500 hover:text-red-400 font-medium transition"
-          >
+          <Link to="/forgot-password" className="text-red-400">
             Forgot Password?
           </Link>
         </div>
       </div>
-
-      {/* Extra styles for blob animation */}
-      <style>{`
-        @keyframes blob {
-          0%, 100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-        }
-        .animate-blob {
-          animation: blob 8s infinite;
-        }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-        .animation-delay-6000 { animation-delay: 6s; }
-      `}</style>
     </div>
   );
 }

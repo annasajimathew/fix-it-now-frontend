@@ -1,16 +1,15 @@
 import { Navigate } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
 
 function ProtectedRoute({ children, role }) {
-  const { isAuthenticated, user } = useContext(AuthContext);
+  const token = localStorage.getItem("token");
+  const userRole = localStorage.getItem("role");
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (role && user.role !== role) {
-    return <Navigate to="/" />;
+  if (role && userRole !== role) {
+    return <Navigate to="/login" replace />;
   }
 
   return children;
