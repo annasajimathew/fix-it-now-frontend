@@ -30,7 +30,7 @@ function Footer() {
         <div>
           <h3 className="font-semibold mb-3">Contact Us</h3>
           <p className="text-sm text-gray-400">Email: support@fixitnow.com</p>
-          <p className="text-sm text-gray-400">Phone: +91 98765 43210</p>
+          <p className="text-sm text-gray-400">Phone: +91 99959 32255</p>
           <p className="text-sm text-gray-400 mt-2">
             Serving communities with reliable services.
           </p>

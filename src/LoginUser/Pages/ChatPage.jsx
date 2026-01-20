@@ -1,15 +1,19 @@
 import ChatBox from "../Components/ChatBox";
 
 function ChatPage() {
-  // TEMP worker (later replace with real selection)
-  const worker = {
-    _id: "695932bb2fd1ba38fa6e6fa1",
-    name: "Worker",
-  };
+  const otherUser = JSON.parse(sessionStorage.getItem("selectedChatUser"));
+
+  if (!otherUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        No chat selected
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <ChatBox otherUser={worker} />
+      <ChatBox otherUser={otherUser} />
     </div>
   );
 }

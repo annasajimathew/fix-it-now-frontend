@@ -34,82 +34,97 @@ import ReviewsPage from "./WorkerUser/Pages/ReviewsPage";
 
 // ================= ADMIN =================
 import AdminDashboard from "./AdminUser/Pages/AdminDashboard";
+import WorkerManagement from "./AdminUser/Pages/WorkerManagement";
 
 function App() {
   return (
     <>
       <Navbar />
+<div className="pt-15">
+  
+        <Routes>
+          {/* ================= GUEST ROUTES ================= */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/workers" element={<WorkersHome />} />
+          <Route path="/workers/:profession" element={<ProfessionWorkers />} />
+          
+          
+          <Route path="/worker/profile" element={<ProtectedRoute role="worker"><ProfileManagement /></ProtectedRoute> }/>
+          <Route path="/worker/reviews" element={<ProtectedRoute role="worker"><ReviewsPage /></ProtectedRoute>}/>
+  
+  
+          {/* ================= AUTH ROUTES ================= */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register/user" element={<RegisterUser />} />
+          <Route path="/register/worker" element={<RegisterWorker />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+  
+          {/* ================= USER ROUTES ================= */}
+          <Route
+            path="/user/dashboard"
+            element={
+              <ProtectedRoute role="user">
+                <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/chat"
+            element={
+              <ProtectedRoute role="user">
+                <UserChatPage />
+              </ProtectedRoute>
+            }
+          />
+  
+          {/* ================= WORKER ROUTES ================= */}
+          <Route
+            path="/worker/dashboard"
+            element={
+              <ProtectedRoute role="worker">
+                <WorkerDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-      <Routes>
-        {/* ================= GUEST ROUTES ================= */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/workers" element={<WorkersHome />} />
-        <Route path="/workers/:profession" element={<ProfessionWorkers />} />
-        <Route path="/worker/:id" element={<WorkerProfile />} />
-        
-        <Route path="/worker/profile" element={<ProtectedRoute role="worker"><ProfileManagement /></ProtectedRoute> }/>
-        <Route path="/worker/reviews" element={<ProtectedRoute role="worker"><ReviewsPage /></ProtectedRoute>}/>
+          <Route
+            path="/worker/:id"
+            element={
+              <ProtectedRoute allowedRoles={["user", "admin"]}>
+                <WorkerProfile />
+              </ProtectedRoute>
+            }
+          />
 
-
-        {/* ================= AUTH ROUTES ================= */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register/user" element={<RegisterUser />} />
-        <Route path="/register/worker" element={<RegisterWorker />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-
-        {/* ================= USER ROUTES ================= */}
-        <Route
-          path="/user"
-          element={
-            <ProtectedRoute role="user">
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/user/chat"
-          element={
-            <ProtectedRoute role="user">
-              <UserChatPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* ================= WORKER ROUTES ================= */}
-        <Route
-          path="/worker"
-          element={
-            <ProtectedRoute role="worker">
-              <WorkerDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/worker/chat"
-          element={
-            <ProtectedRoute role="worker">
-              <WorkerChatPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* ================= ADMIN ROUTES ================= */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* ================= FALLBACK ================= */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route
+            path="/worker/chat/"
+            element={
+              <ProtectedRoute role="worker">
+                <WorkerChatPage />
+              </ProtectedRoute>
+            }
+          />
+  
+          {/* ================= ADMIN ROUTES ================= */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+  
+          <Route path="/admin/workers" element={<WorkerManagement />} />
+  
+          {/* ================= FALLBACK ================= */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+</div>
 
       <Footer />
 
-      <ToastContainer position="top-right" autoClose={3000} theme="colored" />
+      <ToastContainer position="top-right" autoClose={1000} theme="colored" />
     </>
   );
 }

@@ -27,13 +27,13 @@ function ProfessionWorkers() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 px-10 py-20">
-      <h2 className="text-3xl font-semibold text-center mb-8">
-        {profession} in Your Area
+    <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-teal-900 to-gray-900 px-10 py-20">
+      <h2 className="text-3xl text-white font-bold text-center mb-8">
+        {profession.toUpperCase()}S IN YOUR AREA
       </h2>
 
       {/* SEARCH BAR */}
-      <div className="max-w-md mx-auto mb-10">
+      <div className="max-w-md mx-auto mb-10 bg-amber-50">
         <input
           type="text"
           placeholder="Search by location..."
@@ -50,8 +50,8 @@ function ProfessionWorkers() {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">
-          No workers found
+        <p className="text-center text-gray-900">
+          No Approved workers found!
         </p>
       )}
     </div>

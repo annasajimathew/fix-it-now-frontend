@@ -10,7 +10,26 @@ import {
   FiPhone,
   FiMapPin,
   FiBook,
+  FiUpload,
 } from "react-icons/fi";
+
+/* ================= PROFESSION LIST ================= */
+const PROFESSIONS = [
+  "AC Technician",
+  "Carpenter",
+  "Cleaner",
+  "Cook",
+  "Electrician",
+  "Gardener",
+  "Home Tutor",
+  "Mason",
+  "Mechanic",
+  "Painter",
+  "Plumber",
+  "Roofer",
+  "Tailor",
+  "Welder",
+];
 
 function RegisterWorker() {
   const navigate = useNavigate();
@@ -35,16 +54,16 @@ function RegisterWorker() {
   const [loading, setLoading] = useState(false);
   const [particles, setParticles] = useState([]);
 
-  // ================= PARTICLES =================
+  /* ================= PARTICLES ================= */
   useEffect(() => {
     const tempParticles = [];
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 50; i++) {
       tempParticles.push({
         id: i,
         size: Math.random() * 3 + 1,
         top: Math.random() * 100,
         left: Math.random() * 100,
-        duration: Math.random() * 6 + 4,
+        duration: Math.random() * 5 + 5,
       });
     }
     setParticles(tempParticles);
@@ -88,9 +107,10 @@ function RegisterWorker() {
       formData.append("phone", phone);
       formData.append("location", location);
       formData.append("experience", experience);
-      formData.append("languages", JSON.stringify(
-        languages.split(",").map(l => l.trim())
-      ));
+      formData.append(
+        "languages",
+        JSON.stringify(languages.split(",").map((l) => l.trim()))
+      );
       formData.append("education", education);
       formData.append("profileImage", profileImage);
       formData.append("idProof", idProof);
@@ -98,9 +118,7 @@ function RegisterWorker() {
       await axios.post(
         "http://localhost:5000/api/auth/register",
         formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       toast.success("Registered successfully! Await admin approval.");
@@ -114,7 +132,14 @@ function RegisterWorker() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 relative overflow-hidden">
-      {/* Particles */}
+
+      {/* ===== FLOATING BLOBS ===== */}
+      <div className="absolute w-96 h-96 bg-gradient-to-tr from-teal-600 to-emerald-400 rounded-full opacity-30 animate-blob top-[-10%] left-[-10%]" />
+      <div className="absolute w-96 h-96 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full opacity-30 animate-blob animation-delay-2000 bottom-[-10%] right-[-10%]" />
+      <div className="absolute w-72 h-72 bg-gradient-to-tr from-teal-500 to-emerald-300 rounded-full opacity-20 animate-blob animation-delay-4000 top-[30%] right-[-15%]" />
+      <div className="absolute w-72 h-72 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-full opacity-20 animate-blob animation-delay-6000 bottom-[20%] left-[-10%]" />
+
+      {/* ===== PARTICLES ===== */}
       {particles.map((p) => (
         <div
           key={p.id}
@@ -129,53 +154,48 @@ function RegisterWorker() {
         />
       ))}
 
-      {/* Card */}
-      <div className="relative max-w-md w-full bg-gray-800/90 backdrop-blur-md p-10 rounded-3xl shadow-2xl border border-gray-700">
-        <h2 className="text-4xl font-extrabold text-center text-white mb-8">
+      {/* ===== CARD ===== */}
+      <div className="relative max-w-md w-full bg-gray-800/90 backdrop-blur-md p-12 rounded-3xl shadow-2xl border border-gray-700">
+
+        <h2 className="text-4xl font-extrabold text-center text-white mb-10 animate-pulse">
           Register Worker
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
+
           <Input icon={FiUser} value={name} setValue={setName} placeholder="Full Name" />
           <Input icon={FiMail} value={email} setValue={setEmail} placeholder="Email" type="email" />
           <Input icon={FiLock} value={password} setValue={setPassword} placeholder="Password" type="password" />
+
+          {/* ===== PROFESSION DROPDOWN (ONLY CHANGE) ===== */}
+          <div className="relative">
+            <FiBriefcase className="absolute top-3 left-3 text-gray-400" size={20} />
+            <select
+              value={service}
+              onChange={(e) => setService(e.target.value)}
+              required
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/20 bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-emerald-400 shadow-inner"
+            >
+              <option value="">Select Profession</option>
+              {PROFESSIONS.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          </div>
+
           <Input icon={FiPhone} value={phone} setValue={setPhone} placeholder="Phone Number" />
-          <Input icon={FiBriefcase} value={service} setValue={setService} placeholder="Profession (Plumber)" />
           <Input icon={FiMapPin} value={location} setValue={setLocation} placeholder="Location / City" />
           <Input value={experience} setValue={setExperience} placeholder="Experience (years)" type="number" />
           <Input value={languages} setValue={setLanguages} placeholder="Languages (English, Malayalam)" />
           <Input icon={FiBook} value={education} setValue={setEducation} placeholder="Education / Certification" />
 
-          {/* Profile Image */}
-          <div>
-            <label className="text-gray-300 text-sm">Profile Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setProfileImage(e.target.files[0])}
-              className="w-full text-white"
-              required
-            />
-          </div>
-
-          {/* ID Proof */}
-          <div>
-            <label className="text-gray-300 text-sm">
-              ID Proof (Aadhaar / License – max 10MB)
-            </label>
-            <input
-              type="file"
-              accept="image/*,application/pdf"
-              onChange={(e) => setIdProof(e.target.files[0])}
-              className="w-full text-white"
-              required
-            />
-          </div>
+          <FileInput label="Profile Image" accept="image/*" setFile={setProfileImage} />
+          <FileInput label="ID Proof (max 10MB)" accept="image/*,application/pdf" setFile={setIdProof} />
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white font-bold rounded-xl hover:scale-105 transition"
+            className="w-full py-3 bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-600 text-white font-bold rounded-xl shadow-lg hover:scale-105 transition"
           >
             {loading ? "Registering..." : "Register"}
           </button>
@@ -183,16 +203,28 @@ function RegisterWorker() {
 
         <div className="mt-6 text-center text-sm text-gray-300">
           Already have an account?{" "}
-          <Link to="/login" className="text-emerald-400">
+          <Link to="/login" className="text-emerald-400 hover:text-emerald-200">
             Login
           </Link>
         </div>
       </div>
+
+      <style>{`
+        @keyframes blob {
+          0%,100% { transform: translate(0,0) scale(1); }
+          33% { transform: translate(30px,-50px) scale(1.1); }
+          66% { transform: translate(-20px,20px) scale(0.9); }
+        }
+        .animate-blob { animation: blob 8s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+        .animation-delay-6000 { animation-delay: 6s; }
+      `}</style>
     </div>
   );
 }
 
-// ================= INPUT COMPONENT =================
+/* ================= INPUT ================= */
 const Input = ({ icon: Icon, value, setValue, placeholder, type = "text" }) => (
   <div className="relative">
     {Icon && <Icon className="absolute top-3 left-3 text-gray-400" size={20} />}
@@ -201,8 +233,28 @@ const Input = ({ icon: Icon, value, setValue, placeholder, type = "text" }) => (
       value={value}
       onChange={(e) => setValue(e.target.value)}
       placeholder={placeholder}
-      className={`w-full ${Icon ? "pl-10" : "pl-4"} pr-4 py-3 rounded-xl bg-gray-900 text-white border border-white/20 focus:ring-2 focus:ring-emerald-400`}
+      className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/20 bg-gray-900 text-white focus:ring-2 focus:ring-emerald-400"
     />
+  </div>
+);
+
+/* ================= FILE INPUT ================= */
+const FileInput = ({ label, accept, setFile }) => (
+  <div>
+    <label className="text-gray-300 text-sm mb-1 block">{label}</label>
+    <label className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-900 border border-white/20 cursor-pointer hover:border-emerald-400">
+      <FiUpload className="text-gray-400" />
+      <span className="text-sm text-gray-400 upload-text">Choose a file</span>
+      <input
+        type="file"
+        accept={accept}
+        className="hidden"
+        onChange={(e) => {
+          setFile(e.target.files[0]);
+          e.target.closest("label").querySelector(".upload-text").textContent = "File Uploaded ✔";
+        }}
+      />
+    </label>
   </div>
 );
 

@@ -81,19 +81,21 @@ function HomePage() {
           <p className="text-gray-400 mb-10 animate-fadeIn">
             FixItNow helps you find experienced service providers for home and workplace needs. Every worker is verified, rated by real customers, and available based on your location.
           </p>
-          <Link
-            to="/workers"
-            className="inline-block bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-600 text-black px-10 py-3 rounded-md font-semibold hover:scale-110 transform transition duration-500"
-          >
-            Find a Professional
-          </Link>
+          {JSON.parse(sessionStorage.getItem("user"))?.role !== "worker" && (
+            <Link
+              to="/workers"
+              className="inline-block bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-600 text-black px-10 py-3 rounded-md font-semibold hover:scale-110 transform transition duration-500"
+            >
+              Find a Professional
+            </Link>
+          )}
         </div>
       </section>
 
       {/* ================= SKILLED SERVICES (Enhanced) ================= */}
 <section className="py-24 px-6 md:px-10 bg-gray-800 relative overflow-hidden">
   <h2 className="text-3xl font-semibold text-center text-white mb-8">
-    Skilled Services at Your Fingertips
+    SKILLED SERVICES AT YOUR FINGERTIPS
   </h2>
 
   <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -101,7 +103,7 @@ function HomePage() {
     {/* Card 1 */}
     <div className="relative group overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-teal-600 to-emerald-500 transform hover:-translate-y-2 hover:shadow-3xl transition">
       <img
-        src="https://images.unsplash.com/photo-1581091215362-9b3f6578f708?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000"
+        src="https://static.vecteezy.com/system/resources/previews/049/399/813/non_2x/electrician-icon-illustration-free-vector.jpg"
         alt="Electrician"
         className="w-full h-72 object-cover group-hover:scale-110 transition duration-500"
       />
@@ -117,7 +119,7 @@ function HomePage() {
     {/* Card 2 */}
     <div className="relative group overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-teal-600 to-emerald-500 transform hover:-translate-y-2 hover:shadow-3xl transition">
       <img
-        src="https://images.unsplash.com/photo-1598876698110-8589a1f173f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000"
+        src="https://img.freepik.com/premium-vector/plumber-service-vector-silhouette_960358-3031.jpg"
         alt="Plumber"
         className="w-full h-72 object-cover group-hover:scale-110 transition duration-500"
       />
@@ -133,7 +135,7 @@ function HomePage() {
     {/* Card 3 */}
     <div className="relative group overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-teal-600 to-emerald-500 transform hover:-translate-y-2 hover:shadow-3xl transition">
       <img
-        src="https://images.unsplash.com/photo-1596445192240-17b9a2da50c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000"
+        src="https://thumbs.dreamstime.com/b/mechanical-engineer-black-glyph-icon-professional-repairman-technician-to-work-facility-managing-heavy-machinery-silhouette-187000217.jpg"
         alt="Technician"
         className="w-full h-72 object-cover group-hover:scale-110 transition duration-500"
       />
@@ -154,7 +156,7 @@ function HomePage() {
       {/* ================= POPULAR SERVICES ================= */}
       <section className="py-24 px-10 bg-gray-900 relative overflow-hidden">
         <h2 className="text-3xl font-semibold text-center text-white mb-14 animate-fadeIn">
-          Popular Services
+          PPOPULAR SERVICES
         </h2>
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
           <div className="bg-gray-800 p-10 rounded-xl shadow-lg text-center hover:shadow-2xl transition hover:-translate-y-2 animate-slideUp">
@@ -186,7 +188,7 @@ function HomePage() {
       {/* ================= HOW IT WORKS ================= */}
       <section className="py-28 px-10 bg-gray-800 relative overflow-hidden">
         <h2 className="text-3xl font-semibold text-center text-white mb-4 animate-fadeIn">
-          How FixItNow Works
+          HOW FIX-IT-NOW WORKS
         </h2>
         <p className="text-center text-gray-300 mb-16 max-w-2xl mx-auto animate-fadeIn">
           Finding reliable workers is simple and hassle-free. Follow these three easy steps to get the service you need.
@@ -213,7 +215,7 @@ function HomePage() {
     <p className="text-gray-200 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
       Join FixItNow to reach more customers and grow your career. Showcase your skills and connect instantly with clients in your area.
     </p>
-    <Link to={"/register/worker"} className="bg-white text-teal-700 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition">
+    <Link onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} to={"/register/worker"} className="bg-white text-teal-700 font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition">
       Register as Worker
     </Link>
   </div>

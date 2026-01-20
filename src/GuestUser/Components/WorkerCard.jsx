@@ -5,15 +5,35 @@ function WorkerCard({ worker }) {
 
   // ================= CALCULATE AVERAGE RATING =================
   const averageRating =
-    worker.reviews && worker.reviews.length > 0
-      ? (
-          worker.reviews.reduce((sum, r) => sum + r.rating, 0) /
-          worker.reviews.length
-        ).toFixed(1)
+    worker.reviewCount > 0
+      ? worker.averageRating
       : "No ratings";
 
+  // ================= LOGIN & ROLE CHECK (UPDATED) =================
+  const handleViewProfile = () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
+    // 🔴 Guest
+    if (!user) {
+      alert("Please login or register to view full worker profile.");
+      navigate("/login");
+      return;
+    }
+
+    // 🟢 User or Admin
+    if (user.role === "user" || user.role === "admin") {
+      navigate(`/worker/${worker._id}`);
+      return;
+    }
+
+    // ❌ Worker
+    alert("You are not allowed to view this profile.");
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow p-5 flex gap-6">
+    <div className="bg-slate-800 rounded-2xl shadow-md hover:shadow-xl transition duration-300 p-6 flex gap-6 border border-gray-100">
+
+      {/* ================= PROFILE IMAGE ================= */}
       <img
         src={
           worker.profileImage
@@ -21,34 +41,46 @@ function WorkerCard({ worker }) {
             : "https://via.placeholder.com/150"
         }
         alt="worker"
-        className="w-32 h-32 rounded-xl object-cover"
+        className="w-32 h-32 rounded-xl object-cover border"
       />
 
-      <div className="flex-1">
-        <h3 className="text-xl font-bold">{worker.name}</h3>
+      {/* ================= CONTENT ================= */}
+      <div className="flex-1 flex flex-col justify-between">
 
-        {/* ================= SERVICE ================= */}
-        <p className="text-green-600 font-semibold">
-          {worker.service}
-        </p>
+        <div>
+          {/* NAME */}
+          <h3 className="text-xl font-bold text-white">
+            {worker.name}
+          </h3>
 
-        {/* no of reviews */}
-        <p className="text-xs text-gray-500">({worker.reviewCount} reviews)</p>
+          {/* SERVICE */}
+          <p className="text-emerald-600 font-semibold uppercase text-sm mt-1">
+            {worker.service}
+          </p>
 
+          {/* RATING */}
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-yellow-400 font-semibold">
+              ⭐ {averageRating}
+            </span>
+            <span className="text-xs text-slate-200">
+              ({worker.reviewCount} reviews)
+            </span>
+          </div>
 
-        <p className="text-sm text-gray-600">
-          📍 {worker.location}
-        </p>
+          {/* DETAILS */}
+          <div className="mt-3 space-y-1 text-sm text-slate-200">
+            <p>📍 {worker.location}</p>
+            <p>🛠 Experience: {worker.experience} years</p>
+          </div>
+        </div>
 
-        <p className="text-sm">
-          Experience: {worker.experience} years
-        </p>
-
+        {/* ================= ACTION ================= */}
         <button
-          onClick={() => navigate(`/worker/${worker._id}`)}
-          className="mt-4 bg-slate-900 text-white px-6 py-2 rounded-lg hover:bg-slate-800"
-        >
-          View Profile
+          onClick={handleViewProfile}
+          className="mt-5 w-fit bg-gradient-to-r from-teal-500 to-emerald-800 text-gray-200 px-6 py-2 rounded-lg font-medium hover:opacity-50 transition">
+          
+          View Profile →
         </button>
       </div>
     </div>

@@ -48,17 +48,17 @@ function Login() {
 
       // Save to context + localStorage
       login(user, token);
-      localStorage.setItem("role", user.role);
+      
 
       toast.success("Login successful");
 
       // ✅ ROLE BASED REDIRECT
       if (user.role === "admin") {
-        navigate("/admin");
+        navigate("/admin/dashboard");
       } else if (user.role === "worker") {
-        navigate("/worker");
+        navigate("/worker/dashboard");
       } else {
-        navigate("/user");
+        navigate("/user/dashboard");
       }
 
     } catch (error) {
